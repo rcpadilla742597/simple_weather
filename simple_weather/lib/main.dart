@@ -43,9 +43,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
     List loWeather = jsonDecode(response.body)["list"];
 
-    // loWeather.forEach((element) {
-    //   print(element);
-    // });
+    loWeather.forEach((element) {
+      print(element);
+    });
     print(loWeather);
 
     loWeather.forEach(
@@ -62,21 +62,10 @@ class _HomeScreenState extends State<HomeScreen> {
     forecastFuture = forecastFetch();
   }
 
-  ForecastWeatherModel myModel = ForecastWeatherModel(
-      condition: "test1", pictureUrl: "test2", time: "test3");
-
-  List topInfo = [
-    ForecastWeatherModel(condition: "Sunny", pictureUrl: "dog", time: "Now"),
-    ForecastWeatherModel(condition: "Sunny", pictureUrl: "dog", time: "02:00"),
-    ForecastWeatherModel(condition: "Cloudy", pictureUrl: "dog", time: "03:00"),
-    ForecastWeatherModel(condition: "Rain", pictureUrl: "dog", time: "04:00"),
-    ForecastWeatherModel(condition: "Rain", pictureUrl: "dog", time: "05:00")
-  ];
-
   CardWeatherModel cardModel = CardWeatherModel(
       city: 'Orlando',
       date: 'June 01 2021',
-      temp: 'Warm',
+      temp: 'l',
       condition: 'Partly Cloudy');
 
   List cardInfo = List.filled(
@@ -84,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
       CardWeatherModel(
           city: 'Tulungagung',
           date: 'Saturday, 01 May 2021',
-          temp: '24°',
+          temp: 'njnj',
           condition: 'Sunny'));
 
   @override
@@ -178,10 +167,33 @@ class _HomeScreenState extends State<HomeScreen> {
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done) {
                     return Container(
-                        width: 50,
-                        height: 50,
-                        color: Colors.red,
-                        child: Text("snapshot.data[0].condition"));
+                      height: 100,
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        itemCount: snapshot.data.length,
+                        itemBuilder: (context, index) {
+                          return Container(
+                              margin: EdgeInsets.symmetric(horizontal: 20),
+                              width: 50,
+                              height: 50,
+                              child: Column(
+                                children: [
+                                  Text(DateTime.fromMillisecondsSinceEpoch(
+                                              snapshot.data[index].time * 1000)
+                                          .hour
+                                          .toString() +
+                                      ":00"),
+                                  Image(
+                                    image: NetworkImage(
+                                        snapshot.data[index].picture),
+                                  ),
+                                  Text(snapshot.data[index].condition),
+                                ],
+                              ));
+                        },
+                      ),
+                    );
                   } else {
                     return Center(child: CircularProgressIndicator());
                   }
