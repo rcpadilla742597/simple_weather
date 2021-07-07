@@ -6,6 +6,7 @@ import 'package:simple_weather/fweathermodel.dart';
 import 'package:http/http.dart' as http;
 import 'package:device_preview/device_preview.dart';
 import 'dart:convert';
+import 'extenstions.dart';
 
 void main() => runApp(DevicePreview(
     enabled: true,
@@ -43,42 +44,33 @@ class _HomeScreenState extends State<HomeScreen> {
 
     List loWeather = jsonDecode(response.body)["list"];
 
-    loWeather.forEach((element) {
-      print(element);
-    });
-    print(loWeather);
-
     loWeather.forEach(
         (jsonInList) => jsonInList = ForecastWeatherModel.fromJson(jsonInList));
-    print(loWeather);
+
     return loWeather
         .map((jsonInList) => ForecastWeatherModel.fromJson(jsonInList))
         .toList();
+  }
+
+  Future<CardWeatherModel> cardFuture;
+  Future<CardWeatherModel> cardFetch() async {
+    var response = await http.get(Uri.parse(
+        'https://api.openweathermap.org/data/2.5/weather?q=orlando&appid=49a2adca18d67e77118367efe5497060'));
+
+    var loCardWeather = jsonDecode(response.body);
+    print(loCardWeather.runtimeType);
+    return CardWeatherModel.fromJson(loCardWeather);
   }
 
   @override
   void initState() {
     super.initState();
     forecastFuture = forecastFetch();
+    cardFuture = cardFetch();
   }
-
-  CardWeatherModel cardModel = CardWeatherModel(
-      city: 'Orlando',
-      date: 'June 01 2021',
-      temp: 'l',
-      condition: 'Partly Cloudy');
-
-  List cardInfo = List.filled(
-      5,
-      CardWeatherModel(
-          city: 'Tulungagung',
-          date: 'Saturday, 01 May 2021',
-          temp: 'njnj',
-          condition: 'Sunny'));
 
   @override
   Widget build(BuildContext context) {
-    // print(cardModel.city); //Prints Orlando
     return Scaffold(
       backgroundColor: Colors.white,
       drawer: Drawer(
@@ -97,63 +89,20 @@ class _HomeScreenState extends State<HomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Container(
-              height: 250,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                shrinkWrap: true,
-                children: List.generate(
-                  cardInfo.length,
-                  (index) => Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(15)),
-                        color: Colors.blue),
-                    width: 400,
-                    height: 250,
-                    child: Row(
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Text('${cardInfo[index].city}',
-                                style: GoogleFonts.poppins(
-                                  textStyle: TextStyle(
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 18.0,
-                                      color: Colors.white),
-                                )),
-                            Text('${cardInfo[index].date}',
-                                style: GoogleFonts.poppins(
-                                  textStyle: TextStyle(
-                                      fontSize: 15.0, color: Colors.white),
-                                )),
-                            Text('${cardInfo[index].temp}',
-                                style: GoogleFonts.poppins(
-                                  textStyle: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 50.0,
-                                      color: Colors.white),
-                                )),
-                            Text('${cardInfo[index].condition}',
-                                style: GoogleFonts.poppins(
-                                  textStyle: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 15.0,
-                                      color: Colors.white),
-                                )),
-                          ],
-                        ),
-                        Container(
-                          child: Icon(Icons.wb_sunny_rounded,
-                              color: Colors.yellow, size: 100),
-                          padding: const EdgeInsets.all(70),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Container(
+                  height: 250,
+                  child: FutureBuilder(
+                      future: cardFuture,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.done) {
+                          print(snapshot.data);
+                          return renderCard(snapshot.data);
+                        } else {
+                          return Center(child: CircularProgressIndicator());
+                        }
+                      })),
             ),
             Text('Today',
                 style: GoogleFonts.poppins(
@@ -289,6 +238,59 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget renderCard(CardWeatherModel card) {
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Container(
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(15)),
+            color: Colors.blue),
+        width: 375,
+        height: 250,
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Row(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text(card.location,
+                      style: GoogleFonts.poppins(
+                        textStyle: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 18.0,
+                            color: Colors.white),
+                      )),
+                  Text(card.time.toReadable(),
+                      style: GoogleFonts.poppins(
+                        textStyle:
+                            TextStyle(fontSize: 15.0, color: Colors.white),
+                      )),
+                  //303.2.toFString()
+                  Text(card.temp.toFString(),
+                      style: GoogleFonts.poppins(
+                        textStyle: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 50.0,
+                            color: Colors.white),
+                      )),
+                  Text(card.condition,
+                      style: GoogleFonts.poppins(
+                        textStyle: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 15.0,
+                            color: Colors.white),
+                      )),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
