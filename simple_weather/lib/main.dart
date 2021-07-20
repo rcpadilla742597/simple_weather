@@ -19,13 +19,13 @@ void main() => runApp(DevicePreview(
     }));
 
 class MyApp extends StatelessWidget {
-  static const IconData wb_sunny_rounded =
-      IconData(0xf540, fontFamily: 'MaterialIcons');
+  // static const IconData wb_sunny_rounded =
+  //     IconData(0xf540, fontFamily: 'MaterialIcons');
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(),
+      // theme: ThemeData(),
       home: HomeScreen(),
     );
   }
@@ -89,28 +89,25 @@ class _HomeScreenState extends State<HomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Container(
-                  height: 250,
-                  child: FutureBuilder(
-                      future: cardFuture,
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.done) {
-                          print(snapshot.data);
-                          return renderCard(snapshot.data);
-                        } else {
-                          return Center(child: CircularProgressIndicator());
-                        }
-                      })),
-            ),
+            Container(
+                height: 250,
+                child: FutureBuilder(
+                    future: cardFuture,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        print(snapshot.data);
+                        return renderCard(snapshot.data);
+                      } else {
+                        return Center(child: CircularProgressIndicator());
+                      }
+                    })).myPadding(17),
             Text('Today',
                 style: GoogleFonts.poppins(
                   textStyle: TextStyle(
                       fontWeight: FontWeight.w700,
                       fontSize: 18.0,
                       color: Colors.black),
-                )),
+                )).myPadding(8),
             FutureBuilder(
                 future: forecastFuture,
                 builder: (context, snapshot) {
@@ -155,7 +152,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           fontWeight: FontWeight.w700,
                           fontSize: 18.0,
                           color: Colors.black),
-                    )),
+                    )).myPadding(8),
               ],
             ),
             Row(
@@ -169,7 +166,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     style: GoogleFonts.poppins(
                       textStyle: TextStyle(fontSize: 14.0, color: Colors.black),
                     ),
-                  ),
+                  ).myPadding(25),
                 ),
                 Flexible(
                     flex: 1,
@@ -187,7 +184,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   style: GoogleFonts.poppins(
                     textStyle: TextStyle(fontSize: 14.0, color: Colors.black),
                   ),
-                ),
+                ).myPadding(25),
                 Icon(Icons.wb_sunny_rounded, color: Colors.yellow, size: 25),
                 Text('19°/21°')
               ],
@@ -201,7 +198,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   style: GoogleFonts.poppins(
                     textStyle: TextStyle(fontSize: 14.0, color: Colors.black),
                   ),
-                ),
+                ).myPadding(25),
                 Icon(Icons.wb_sunny_rounded, color: Colors.yellow, size: 25),
                 Text('24°/25°')
               ],
@@ -215,7 +212,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   style: GoogleFonts.poppins(
                     textStyle: TextStyle(fontSize: 14.0, color: Colors.black),
                   ),
-                ),
+                ).myPadding(25),
                 Icon(Icons.wb_sunny_rounded, color: Colors.yellow, size: 25),
                 Text('28°/29°')
               ],
@@ -229,7 +226,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   style: GoogleFonts.poppins(
                     textStyle: TextStyle(fontSize: 14.0, color: Colors.black),
                   ),
-                ),
+                ).myPadding(25),
                 Icon(Icons.wb_sunny_rounded, color: Colors.yellow, size: 25),
                 Text('24°/25°',
                     style: GoogleFonts.poppins(
@@ -244,54 +241,47 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget renderCard(CardWeatherModel card) {
-    return Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: Container(
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(15)),
-            color: Colors.blue),
-        width: 375,
-        height: 250,
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Row(
+    return Container(
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+          color: Colors.blue),
+      width: 375,
+      height: 250,
+      child: Row(
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Text(card.location,
-                      style: GoogleFonts.poppins(
-                        textStyle: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 18.0,
-                            color: Colors.white),
-                      )),
-                  Text(card.time.toReadable(),
-                      style: GoogleFonts.poppins(
-                        textStyle:
-                            TextStyle(fontSize: 15.0, color: Colors.white),
-                      )),
-                  //303.2.toFString()
-                  Text(card.temp.toFString(),
-                      style: GoogleFonts.poppins(
-                        textStyle: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 50.0,
-                            color: Colors.white),
-                      )),
-                  Text(card.condition,
-                      style: GoogleFonts.poppins(
-                        textStyle: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 15.0,
-                            color: Colors.white),
-                      )),
-                ],
-              ),
+              Text(card.location.toHello(),
+                  style: GoogleFonts.poppins(
+                    textStyle: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 18.0,
+                        color: Colors.white),
+                  )).myPadding(10),
+              Text(card.time.toReadable(),
+                  style: GoogleFonts.poppins(
+                    textStyle: TextStyle(fontSize: 15.0, color: Colors.white),
+                  )).myPadding(10),
+              //303.2.toFString()
+              Text(card.temp.toRound(4).toString(),
+                  style: GoogleFonts.poppins(
+                    textStyle: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 50.0,
+                        color: Colors.white),
+                  )).myPadding(10),
+              Text(card.condition,
+                  style: GoogleFonts.poppins(
+                    textStyle: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 15.0,
+                        color: Colors.white),
+                  )).myPadding(10),
             ],
           ),
-        ),
+        ],
       ),
     );
   }
