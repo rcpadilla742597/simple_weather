@@ -2,11 +2,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-// Kelvein to Fahrenheit
+// Kelvin to Fahrenheit
 extension WeatherExtensions on double {
   String toFString() {
     var convert = (this - 273) * (9 / 5) + 32;
-    // convert = convert.roundToDouble();
+    convert = convert.roundToDouble();
     return '$convert°';
   }
 
@@ -33,7 +33,7 @@ extension RoundDouble on double {
 extension Hello on String {
   String toHello() {
     var attach = this;
-    return '$attach Hello';
+    return 'Hello, $attach!';
   }
 }
 
@@ -43,6 +43,13 @@ extension TimeExtensions on int {
     var date = DateTime.fromMillisecondsSinceEpoch((this * 1000).round());
     var formattedDate = DateFormat.yMMMd().format(date); // Apr 8, 2020
     return '$formattedDate';
+  }
+
+  String dayOfWeek() {
+    var date = DateTime.fromMillisecondsSinceEpoch((this * 1000).round());
+    var displayDays = DateFormat('EEEE').format(date);
+
+    return '$displayDays';
   }
 }
 

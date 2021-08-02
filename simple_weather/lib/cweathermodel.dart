@@ -1,9 +1,7 @@
 // ignore: implementation_imports
-import 'package:flutter/src/widgets/basic.dart';
 
 class CardWeatherModel {
   String location = '';
-
   double temp = 0.0;
   String picture = '';
   String condition = '';

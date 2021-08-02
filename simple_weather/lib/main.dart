@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:simple_weather/cweathermodel.dart';
+import 'package:simple_weather/dweathermodel.dart';
 import 'package:simple_weather/fweathermodel.dart';
 import 'package:http/http.dart' as http;
 import 'package:device_preview/device_preview.dart';
 import 'dart:convert';
+import 'constants.dart';
 import 'extenstions.dart';
 
 void main() => runApp(DevicePreview(
@@ -19,13 +21,10 @@ void main() => runApp(DevicePreview(
     }));
 
 class MyApp extends StatelessWidget {
-  // static const IconData wb_sunny_rounded =
-  //     IconData(0xf540, fontFamily: 'MaterialIcons');
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      // theme: ThemeData(),
       home: HomeScreen(),
     );
   }
@@ -37,6 +36,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  // Today
   Future<List<ForecastWeatherModel>> forecastFuture;
   Future<List<ForecastWeatherModel>> forecastFetch() async {
     var response = await http.get(Uri.parse(
@@ -52,14 +52,38 @@ class _HomeScreenState extends State<HomeScreen> {
         .toList();
   }
 
+// Card
   Future<CardWeatherModel> cardFuture;
   Future<CardWeatherModel> cardFetch() async {
+    print(name);
     var response = await http.get(Uri.parse(
         'https://api.openweathermap.org/data/2.5/weather?q=orlando&appid=49a2adca18d67e77118367efe5497060'));
 
     var loCardWeather = jsonDecode(response.body);
-    print(loCardWeather.runtimeType);
+
     return CardWeatherModel.fromJson(loCardWeather);
+  }
+
+// Next 7 days
+  Future<List<DaysWeatherModel>> daysFuture;
+  Future<List<DaysWeatherModel>> daysFetch() async {
+    var response = await http.get(Uri.parse(
+        'https://api.openweathermap.org/data/2.5/forecast?q=orlando&appid=fe514ac7e7ef730c4b1da547d4a2e9ea'));
+
+    List loDaysWeather = jsonDecode(response.body)["list"];
+
+    List shortList = [];
+    for (int i = 0; i < loDaysWeather.length; i++) {
+      if (i % 8 == 0) {
+        shortList.add(loDaysWeather[i]);
+      }
+    }
+
+    // loDaysWeather.forEach(
+    //     (jsonInList) => jsonInList = DaysWeatherModel.fromJson(jsonInList));
+    return shortList
+        .map((jsonInList) => DaysWeatherModel.fromJson(jsonInList))
+        .toList();
   }
 
   @override
@@ -67,6 +91,22 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     forecastFuture = forecastFetch();
     cardFuture = cardFetch();
+    daysFuture = daysFetch();
+
+//Finding even numbers between 8 to 56
+    for (int i = 1; i <= 56; i++) {
+      if (i % 8 == 0) {
+        print(i);
+      }
+    }
+
+    //for in loop
+
+    List loDaysWeather = ["Mercury", "Venus", "Earth", "Mars"];
+
+    for (String response in loDaysWeather) {
+      print(response);
+    }
   }
 
   @override
@@ -144,96 +184,50 @@ class _HomeScreenState extends State<HomeScreen> {
                     return Center(child: CircularProgressIndicator());
                   }
                 }),
-            Row(
-              children: [
-                Text('Next 7 days',
-                    style: GoogleFonts.poppins(
-                      textStyle: TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 18.0,
-                          color: Colors.black),
-                    )).myPadding(8),
-              ],
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Flexible(
-                  flex: 2,
-                  child: Text(
-                    'Sunday',
-                    style: GoogleFonts.poppins(
-                      textStyle: TextStyle(fontSize: 14.0, color: Colors.black),
-                    ),
-                  ).myPadding(25),
-                ),
-                Flexible(
-                    flex: 1,
-                    child: Icon(Icons.wb_sunny_rounded,
-                        color: Colors.yellow, size: 25)),
-                Flexible(flex: 1, child: Text('24°/25°'))
-              ],
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Monday',
-                  style: GoogleFonts.poppins(
-                    textStyle: TextStyle(fontSize: 14.0, color: Colors.black),
-                  ),
-                ).myPadding(25),
-                Icon(Icons.wb_sunny_rounded, color: Colors.yellow, size: 25),
-                Text('19°/21°')
-              ],
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Tuesday',
-                  style: GoogleFonts.poppins(
-                    textStyle: TextStyle(fontSize: 14.0, color: Colors.black),
-                  ),
-                ).myPadding(25),
-                Icon(Icons.wb_sunny_rounded, color: Colors.yellow, size: 25),
-                Text('24°/25°')
-              ],
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Wednesday',
-                  style: GoogleFonts.poppins(
-                    textStyle: TextStyle(fontSize: 14.0, color: Colors.black),
-                  ),
-                ).myPadding(25),
-                Icon(Icons.wb_sunny_rounded, color: Colors.yellow, size: 25),
-                Text('28°/29°')
-              ],
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Thursday',
-                  style: GoogleFonts.poppins(
-                    textStyle: TextStyle(fontSize: 14.0, color: Colors.black),
-                  ),
-                ).myPadding(25),
-                Icon(Icons.wb_sunny_rounded, color: Colors.yellow, size: 25),
-                Text('24°/25°',
-                    style: GoogleFonts.poppins(
-                      textStyle: TextStyle(fontSize: 14.0, color: Colors.black),
-                    ))
-              ],
-            ),
+            Text('Next 7 days',
+                style: GoogleFonts.poppins(
+                  textStyle: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 18.0,
+                      color: Colors.black),
+                )).myPadding(8),
+            FutureBuilder(
+              future: daysFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  if (!snapshot.hasData) {
+                    return Center(child: CircularProgressIndicator());
+                  } else {
+                    return Container(
+                      height: 300,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        shrinkWrap: true,
+                        itemCount: snapshot.data.length,
+                        itemBuilder: (context, index) {
+                          int day = snapshot.data[index].time;
+                          double temp = snapshot.data[index].temp;
+                          // print(4.runtimeType);
+                          return Container(
+                              child: Column(
+                            children: [
+                              Text(day.dayOfWeek()),
+                              Image(
+                                image:
+                                    NetworkImage(snapshot.data[index].picture),
+                              ),
+                              Text(temp.toFString()),
+                            ],
+                          ));
+                        },
+                      ),
+                    );
+                  }
+                } else {
+                  return Center(child: CircularProgressIndicator());
+                }
+              },
+            )
           ],
         ),
       ),
@@ -257,7 +251,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   style: GoogleFonts.poppins(
                     textStyle: TextStyle(
                         fontWeight: FontWeight.w700,
-                        fontSize: 18.0,
+                        fontSize: 20.0,
                         color: Colors.white),
                   )).myPadding(10),
               Text(card.time.toReadable(),
@@ -265,11 +259,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     textStyle: TextStyle(fontSize: 15.0, color: Colors.white),
                   )).myPadding(10),
               //303.2.toFString()
-              Text(card.temp.toRound(4).toString(),
+              Text(card.temp.toFString(),
                   style: GoogleFonts.poppins(
                     textStyle: TextStyle(
                         fontWeight: FontWeight.w500,
-                        fontSize: 50.0,
+                        fontSize: 60.0,
                         color: Colors.white),
                   )).myPadding(10),
               Text(card.condition,
