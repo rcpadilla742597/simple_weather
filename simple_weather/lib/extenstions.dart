@@ -40,6 +40,10 @@ extension Hello on String {
 // Timestamp to Date
 extension TimeExtensions on int {
   String toReadable() {
+    if (this == 0) {
+      return 'Error';
+    }
+
     var date = DateTime.fromMillisecondsSinceEpoch((this * 1000).round());
     var formattedDate = DateFormat.yMMMd().format(date); // Apr 8, 2020
     return '$formattedDate';

@@ -11,10 +11,10 @@ class ForecastWeatherModel {
 
   factory ForecastWeatherModel.fromJson(Map<String, dynamic> json) {
     return ForecastWeatherModel(
-      time: json['dt'],
+      time: json['dt'] ?? 0,
       pictureUrl:
           "https://openweathermap.org/img/wn/${json['weather'][0]['icon']}@2x.png",
-      condition: json["weather"][0]["main"],
+      condition: json["weather"][0]["main"] ?? 0,
     );
   }
 }

@@ -13,7 +13,7 @@ class DaysWeatherModel {
     return DaysWeatherModel(
         pictureUrl:
             "https://openweathermap.org/img/wn/${json['weather'][0]['icon']}@2x.png",
-        time: json['dt'],
-        temp: json['main']['temp']);
+        time: json['dt'] ?? 0,
+        temp: json['main']['temp'] ?? 0);
   }
 }
