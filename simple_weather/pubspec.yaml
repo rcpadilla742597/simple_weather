@@ -25,6 +25,7 @@ dependencies:
   device_preview: ^0.7.3
   http:
   get:
+  fancy_bottom_navigation: ^0.3.2
   flutter_vector_icons:
   flutter:
     sdk: flutter

@@ -8,7 +8,9 @@ import 'package:http/http.dart' as http;
 import 'package:device_preview/device_preview.dart';
 import 'dart:convert';
 import 'constants.dart';
+import 'controllers/home_controller.dart';
 import 'extenstions.dart';
+import 'package:fancy_bottom_navigation/fancy_bottom_navigation.dart';
 
 void main() => runApp(DevicePreview(
     enabled: true,
@@ -121,7 +123,20 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    HomeController controller = Get.put(HomeController());
     return Scaffold(
+      bottomNavigationBar: FancyBottomNavigation(
+        tabs: [
+          TabData(iconData: Icons.ac_unit, title: 'Home'),
+          TabData(iconData: Icons.ac_unit, title: 'Home'),
+          TabData(iconData: Icons.ac_unit, title: 'Home'),
+        ],
+        onTabChangedListener: (position) {
+          setState(() {
+            controller.change(position);
+          });
+        },
+      ),
       backgroundColor: Colors.white,
       drawer: Drawer(
           child: Container(
