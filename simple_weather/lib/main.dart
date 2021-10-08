@@ -109,7 +109,7 @@ class HomeScreen extends GetView<HomeController> {
   }
 }
 
-// Second Page or Camera Page Page View
+// CAMERA
 class Camera extends StatelessWidget {
   const Camera({Key key}) : super(key: key);
 
@@ -126,7 +126,8 @@ class Camera extends StatelessWidget {
   }
 }
 
-// Third Page or Camera Page Page View
+// <----------------------------- BEGINNING OF SETTINGS ----------------------------->
+
 class Settings extends StatefulWidget {
   Settings({Key key}) : super(key: key);
 
@@ -137,7 +138,7 @@ class Settings extends StatefulWidget {
 class _SettingsState extends State<Settings>
     with AutomaticKeepAliveClientMixin {
   @override
-  // TODO: implement wantKeepAlive
+  // TODO: Implement wantKeepAlive to store theme. Use shared preferences
   bool get wantKeepAlive => true;
 
   bool valNotify1 = false;
@@ -275,20 +276,24 @@ GestureDetector buildAccountOption(BuildContext context, String title) {
               );
             });
       },
-      child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(title,
-                  style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.grey[600])),
-              Icon(Icons.arrow_forward_ios, color: Colors.grey)
-            ],
-          )));
+      child: Container(
+        color: Colors.transparent,
+        child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(title,
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.grey[600])),
+                Icon(Icons.arrow_forward_ios, color: Colors.grey)
+              ],
+            )),
+      ));
 }
+// <----------------------------- END OF SETTINGS ----------------------------->
 
 //constructor for weatherscreen which points to private constructor/class
 class WeatherScreen extends StatefulWidget {
