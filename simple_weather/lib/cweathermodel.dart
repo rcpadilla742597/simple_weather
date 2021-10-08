@@ -29,7 +29,7 @@ class CardWeatherModel {
     // print(json["name"]);
     //add error checking
     return CardWeatherModel(
-      time: null ?? 0,
+      time: json['dt'] ?? 0,
       location: json['name'] ?? 0,
       temp: json['main']['temp'] ?? 0,
       pictureUrl:

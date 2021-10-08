@@ -1,0 +1,5 @@
+version: "Apple Swift version 5.4.2 (swiftlang-1205.0.28.2 clang-1205.0.19.57)"
+options: "74a312a483f158eb6d1286e3f744860f"
+build_time: [1633067951, 440966000]
+inputs:
+  "/Users/rickypadilla/Desktop/theCoderSchool/SimpleWeather/simple_weather/ios/Runner/AppDelegate.swift": [1618595276, 0]

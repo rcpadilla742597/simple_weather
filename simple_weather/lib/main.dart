@@ -1,13 +1,14 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:simple_weather/cweathermodel.dart';
+import 'package:simple_weather/custom_theme.dart';
 import 'package:simple_weather/dweathermodel.dart';
 import 'package:simple_weather/fweathermodel.dart';
 import 'package:http/http.dart' as http;
 import 'package:device_preview/device_preview.dart';
 import 'dart:convert';
-import 'constants.dart';
 import 'controllers/home_controller.dart';
 import 'extenstions.dart';
 import 'package:fancy_bottom_navigation/fancy_bottom_navigation.dart';
@@ -21,31 +22,286 @@ void main() => runApp(DevicePreview(
     builder: (context) {
       return MyApp();
     }));
+// void main() => runApp(MyApp());
+// this is what you need when you are ready go to production
+
+// class MyApp extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return GetMaterialApp(
+//       defaultTransition: Transition.fadeIn,
+//       transitionDuration: Duration(milliseconds: 400),
+//       debugShowCheckedModeBanner: false,
+//       home: Listener(
+//           onPointerDown: (_) {
+//             FocusScopeNode currentFocus = FocusScope.of(context);
+//             if (!currentFocus.hasPrimaryFocus &&
+//                 currentFocus.focusedChild != null) {
+//               currentFocus.focusedChild.unfocus();
+//             }
+//           },
+//           child: FutureBuilder(
+//               future: Hive.openBox('anime'),
+//               builder: (context, snapshot) {
+//                 if (!snapshot.hasData) {
+//                   return Center(
+//                     child: CircularProgressIndicator(),
+//                   );
+//                 } else {
+//                   return HomeScreen();
+//                 }
+//               })),
+//     );
+//   }
+// }
 
 class MyApp extends StatelessWidget {
   const MyApp({Key key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    Get.put(HomeController());
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: HomeScreen(
-        cityName: 'Tampa',
+      home:
+          HomeScreen(), //wrap this homescreen in this listener wiget, copy the code
+    );
+  }
+}
+
+//houses drawer, nav bar, bottom bar
+
+class HomeScreen extends GetView<HomeController> {
+  List<Widget> pages = [
+    WeatherScreen(cityName: 'Orlando'),
+    Camera(),
+    Settings()
+  ];
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: PageView(
+        physics: NeverScrollableScrollPhysics(),
+        children: pages,
+        controller: controller.pageController,
+      ),
+      bottomNavigationBar: FancyBottomNavigation(
+        tabs: [
+          TabData(iconData: Icons.home, title: 'Home'),
+          TabData(iconData: Icons.camera, title: 'Camera'),
+          TabData(iconData: Icons.settings, title: 'Settings'),
+        ],
+        onTabChangedListener: (position) {
+          controller.currentIndex.value = position;
+          controller.pageController.jumpToPage(position);
+          controller.change(position);
+        },
+        initialSelection: controller.currentIndex.value,
+        key: controller.bottomNavigationKey,
+      ),
+      drawer: Drawer(child: Container(color: CustomTheme.colors.customRed)),
+      appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.black),
+        elevation: 0,
+        backgroundColor: Colors.white,
+        title: Text('Weather', style: TextStyle(color: Colors.black)),
       ),
     );
   }
 }
 
-class HomeScreen extends StatefulWidget {
+// Second Page or Camera Page Page View
+class Camera extends StatelessWidget {
+  const Camera({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: ElevatedButton(
+        onPressed: () {
+          // Navigate back to first route when tapped.
+        },
+        child: Text('Test 1'),
+      ),
+    );
+  }
+}
+
+// Third Page or Camera Page Page View
+class Settings extends StatefulWidget {
+  Settings({Key key}) : super(key: key);
+
+  @override
+  _SettingsState createState() => _SettingsState();
+}
+
+class _SettingsState extends State<Settings>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
+
+  bool valNotify1 = false;
+
+  bool valNotify2 = false;
+
+  bool valNotify3 = false;
+
+  onChangeFunction1(bool newValue1) {
+    setState(() {
+      valNotify1 = newValue1;
+      Get.changeTheme(Get.isDarkMode ? ThemeData.light() : ThemeData.dark());
+    });
+  }
+
+  onChangeFunction2(bool newValue2) {
+    setState(() {
+      valNotify2 = newValue2;
+    });
+  }
+
+  onChangeFunction3(bool newValue3) {
+    setState(() {
+      valNotify3 = newValue3;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        padding: const EdgeInsets.all(10),
+        child: ListView(
+          children: [
+            //Account
+            SizedBox(height: 40),
+            Row(
+              children: [
+                Icon(
+                  Icons.person,
+                  color: Colors.blue,
+                ),
+                SizedBox(width: 10),
+                Text("Account",
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold))
+              ],
+            ),
+            Divider(height: 20, thickness: 1),
+            SizedBox(height: 10),
+            buildAccountOption(context, "Change Password"),
+            buildAccountOption(context, "Content Settings"),
+            buildAccountOption(context, "Social"),
+            buildAccountOption(context, "Language"),
+            buildAccountOption(context, "Privacy and Security"),
+
+            //Notifications
+            SizedBox(height: 40),
+            Row(
+              children: [
+                Icon(Icons.volume_up_outlined, color: Colors.blue),
+                SizedBox(width: 10),
+                Text("Notifications",
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold))
+              ],
+            ),
+            Divider(height: 20, thickness: 1),
+            SizedBox(height: 10),
+            buildNotificationOption(
+                "Theme Dark", valNotify1, onChangeFunction1),
+            buildNotificationOption(
+                "Account Active", valNotify2, onChangeFunction2),
+            buildNotificationOption(
+                "Opportunity", valNotify3, onChangeFunction3),
+            SizedBox(height: 50),
+            Center(
+                child: OutlinedButton(
+              style: OutlinedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(horizontal: 40),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20))),
+              onPressed: () {},
+              child: Text("SIGN OUT",
+                  style: TextStyle(
+                    fontSize: 16,
+                    letterSpacing: 2.2,
+                  )),
+            ))
+          ],
+        ));
+  }
+}
+
+Padding buildNotificationOption(
+    String title, bool value, Function onChangeMethod) {
+  return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+        Text(title,
+            style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w500,
+                color: Colors.grey[600])),
+        Transform.scale(
+            scale: 0.7,
+            child: CupertinoSwitch(
+              activeColor: Colors.blue,
+              trackColor: Colors.grey,
+              value: value,
+              onChanged: (bool newValue) {
+                onChangeMethod(newValue);
+              },
+            ))
+      ]));
+}
+
+// onTap shows Option 1 and 2 with
+GestureDetector buildAccountOption(BuildContext context, String title) {
+  return GestureDetector(
+      onTap: () {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text(title),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [Text("Option 1"), Text("Option 2")],
+                ),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text("Close"))
+                ],
+              );
+            });
+      },
+      child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(title,
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.grey[600])),
+              Icon(Icons.arrow_forward_ios, color: Colors.grey)
+            ],
+          )));
+}
+
+//constructor for weatherscreen which points to private constructor/class
+class WeatherScreen extends StatefulWidget {
   final String cityName;
-  const HomeScreen({
+  const WeatherScreen({
     Key key,
     this.cityName,
   }) : super(key: key);
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  _WeatherScreenState createState() => _WeatherScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _WeatherScreenState extends State<WeatherScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController _controller = new TextEditingController();
   // Today
@@ -64,7 +320,7 @@ class _HomeScreenState extends State<HomeScreen> {
         .toList();
   }
 
-// Card
+  // Card Future
   Future<CardWeatherModel> cardFuture;
   Future<CardWeatherModel> cardFetch(String query) async {
     // print(name);
@@ -76,7 +332,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return CardWeatherModel.fromJson(loCardWeather);
   }
 
-// Next 5 days
+  // Next 5 days config
   Future<List<DaysWeatherModel>> daysFuture;
   Future<List<DaysWeatherModel>> daysFetch(String query) async {
     var response = await http.get(Uri.parse(
@@ -91,8 +347,6 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     }
 
-    // loDaysWeather.forEach(
-    //     (jsonInList) => jsonInList = DaysWeatherModel.fromJson(jsonInList));
     return shortList
         .map((jsonInList) => DaysWeatherModel.fromJson(jsonInList))
         .toList();
@@ -105,15 +359,13 @@ class _HomeScreenState extends State<HomeScreen> {
     cardFuture = cardFetch(widget.cityName);
     daysFuture = daysFetch(widget.cityName);
 
-//Finding even numbers between 8 to 56
+    //Finding even numbers between 8 to 56
     for (int i = 1; i <= 56; i++) {
       if (i % 8 == 0) {
         // print(i);
       }
     }
-
-    //for in loop
-
+    // for in loop
     List loDaysWeather = ["Mercury", "Venus", "Earth", "Mars"];
 
     for (String response in loDaysWeather) {
@@ -121,38 +373,17 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  // Fancy bottom navigation
   @override
   Widget build(BuildContext context) {
     HomeController controller = Get.put(HomeController());
-    return Scaffold(
-      bottomNavigationBar: FancyBottomNavigation(
-        tabs: [
-          TabData(iconData: Icons.ac_unit, title: 'Home'),
-          TabData(iconData: Icons.ac_unit, title: 'Home'),
-          TabData(iconData: Icons.ac_unit, title: 'Home'),
-        ],
-        onTabChangedListener: (position) {
-          setState(() {
-            controller.change(position);
-          });
-        },
-      ),
-      backgroundColor: Colors.white,
-      drawer: Drawer(
-          child: Container(
-        color: Colors.blue,
-      )),
-      appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.black),
-        elevation: 0,
-        backgroundColor: Colors.white,
-        title: Text('Weather', style: TextStyle(color: Colors.black)),
-      ),
-      body: SingleChildScrollView(
+    return Material(
+      child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
+            // Search Bar
             Form(
                 key: _formKey,
                 child: Column(
@@ -180,7 +411,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 print("I'm here");
 
                                 Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => HomeScreen(
+                                  builder: (context) => WeatherScreen(
                                     cityName: _controller.text,
                                   ),
                                 ));
@@ -201,12 +432,14 @@ class _HomeScreenState extends State<HomeScreen> {
                         return Center(child: CircularProgressIndicator());
                       }
                     })).myPadding(17),
+            // Today Forecast
             Text('Today',
                 style: GoogleFonts.poppins(
                   textStyle: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 18.0,
-                      color: Colors.black),
+                    fontWeight: FontWeight.w700,
+                    fontSize: 18.0,
+                    color: CustomTheme.colors.lightBlue,
+                  ),
                 )).myPadding(8),
             FutureBuilder(
                 future: forecastFuture,
@@ -245,13 +478,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   }
                 }),
 
-            //Next 5 days
+            // Next 5 days using DataTable
             Text('Next 5 days',
                 style: GoogleFonts.poppins(
                   textStyle: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 18.0,
-                      color: Colors.black),
+                    fontWeight: FontWeight.w700,
+                    fontSize: 18.0,
+                    color: CustomTheme.colors.lightBlue,
+                  ),
                 )).myPadding(8),
             FutureBuilder<List<DaysWeatherModel>>(
               future: daysFuture,
@@ -286,37 +520,6 @@ class _HomeScreenState extends State<HomeScreen> {
                             }).toList()),
                       ),
                     );
-
-                    // return Container(
-                    //   height: 300,
-                    //   child: ListView.builder(
-                    //     scrollDirection: Axis.vertical,
-                    //     shrinkWrap: true,
-                    //     itemCount: snapshot.data.length,
-                    //     itemBuilder: (context, index) {
-                    //       int day = snapshot.data[index].time;
-                    //       double temp = snapshot.data[index].temp;
-                    //       // print(4.runtimeType);
-                    //       return Container(
-                    //           margin: EdgeInsets.symmetric(horizontal: 20),
-                    //           child: Row(
-                    //             crossAxisAlignment: CrossAxisAlignment.start,
-                    //             mainAxisAlignment:
-                    //                 MainAxisAlignment.spaceBetween,
-                    //             children: [
-                    //               Text(day.dayOfWeek()),
-                    //               Image(
-                    //                 width: 50,
-                    //                 height: 50,
-                    //                 image: NetworkImage(
-                    //                     snapshot.data[index].picture),
-                    //               ),
-                    //               Text(temp.toFString()),
-                    //             ],
-                    //           ));
-                    //     },
-                    //   ),
-                    // );
                   }
                 } else {
                   return Center(child: CircularProgressIndicator());
@@ -329,11 +532,20 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  // Rendering CardWeatherModel
   Widget renderCard(CardWeatherModel card) {
     return Container(
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(15)),
-          color: Colors.blue),
+        gradient: LinearGradient(
+          begin: Alignment.topRight,
+          end: Alignment.bottomLeft,
+          colors: [
+            Colors.blue,
+            Colors.red,
+          ],
+        ),
+        borderRadius: BorderRadius.all(Radius.circular(15)),
+      ),
       width: 375,
       height: 250,
       child: Row(
@@ -361,7 +573,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         fontSize: 60.0,
                         color: Colors.white),
                   )).myPadding(10),
-              Text(card.message,
+              Text(card.condition,
                   style: GoogleFonts.poppins(
                     textStyle: TextStyle(
                         fontWeight: FontWeight.w600,

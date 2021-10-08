@@ -1,0 +1,22 @@
+dependencies: \
+  /Users/rickypadilla/Desktop/theCoderSchool/SimpleWeather/simple_weather/ios/Runner/GeneratedPluginRegistrant.m \
+  /Users/rickypadilla/Desktop/theCoderSchool/SimpleWeather/simple_weather/ios/Runner/GeneratedPluginRegistrant.h \
+  /Users/rickypadilla/Desktop/theCoderSchool/SimpleWeather/simple_weather/ios/build/Debug-iphoneos/Flutter.framework/Modules/module.modulemap \
+  /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.5.sdk/usr/include/mach-o/compact_unwind_encoding.modulemap \
+  /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.5.sdk/usr/include/mach-o/dyld.modulemap \
+  /Users/rickypadilla/Desktop/theCoderSchool/SimpleWeather/simple_weather/ios/build/Debug-iphoneos/Flutter.framework/Headers/FlutterViewController.h \
+  /Users/rickypadilla/Desktop/theCoderSchool/SimpleWeather/simple_weather/ios/build/Debug-iphoneos/Flutter.framework/Headers/FlutterPluginAppLifeCycleDelegate.h \
+  /Users/rickypadilla/Desktop/theCoderSchool/SimpleWeather/simple_weather/ios/build/Debug-iphoneos/Flutter.framework/Headers/FlutterHeadlessDartRunner.h \
+  /Users/rickypadilla/Desktop/theCoderSchool/SimpleWeather/simple_weather/ios/build/Debug-iphoneos/Flutter.framework/Headers/FlutterEngineGroup.h \
+  /Users/rickypadilla/Desktop/theCoderSchool/SimpleWeather/simple_weather/ios/build/Debug-iphoneos/Flutter.framework/Headers/FlutterEngine.h \
+  /Users/rickypadilla/Desktop/theCoderSchool/SimpleWeather/simple_weather/ios/build/Debug-iphoneos/Flutter.framework/Headers/FlutterDartProject.h \
+  /Users/rickypadilla/Desktop/theCoderSchool/SimpleWeather/simple_weather/ios/build/Debug-iphoneos/Flutter.framework/Headers/FlutterCallbackCache.h \
+  /Users/rickypadilla/Desktop/theCoderSchool/SimpleWeather/simple_weather/ios/build/Debug-iphoneos/Flutter.framework/Headers/FlutterTexture.h \
+  /Users/rickypadilla/Desktop/theCoderSchool/SimpleWeather/simple_weather/ios/build/Debug-iphoneos/Flutter.framework/Headers/FlutterPlatformViews.h \
+  /Users/rickypadilla/Desktop/theCoderSchool/SimpleWeather/simple_weather/ios/build/Debug-iphoneos/Flutter.framework/Headers/FlutterCodecs.h \
+  /Users/rickypadilla/Desktop/theCoderSchool/SimpleWeather/simple_weather/ios/build/Debug-iphoneos/Flutter.framework/Headers/FlutterChannels.h \
+  /Users/rickypadilla/Desktop/theCoderSchool/SimpleWeather/simple_weather/ios/build/Debug-iphoneos/Flutter.framework/Headers/FlutterBinaryMessenger.h \
+  /Users/rickypadilla/Desktop/theCoderSchool/SimpleWeather/simple_weather/ios/build/Debug-iphoneos/Flutter.framework/Headers/FlutterPlugin.h \
+  /Users/rickypadilla/Desktop/theCoderSchool/SimpleWeather/simple_weather/ios/build/Debug-iphoneos/Flutter.framework/Headers/FlutterMacros.h \
+  /Users/rickypadilla/Desktop/theCoderSchool/SimpleWeather/simple_weather/ios/build/Debug-iphoneos/Flutter.framework/Headers/FlutterAppDelegate.h \
+  /Users/rickypadilla/Desktop/theCoderSchool/SimpleWeather/simple_weather/ios/build/Debug-iphoneos/Flutter.framework/Headers/Flutter.h
