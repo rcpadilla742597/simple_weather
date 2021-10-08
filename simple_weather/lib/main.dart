@@ -458,7 +458,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                         itemCount: snapshot.data.length,
                         itemBuilder: (context, index) {
                           return Container(
-                              margin: EdgeInsets.symmetric(horizontal: 20),
+                              margin: EdgeInsets.symmetric(horizontal: 10),
                               width: 50,
                               height: 50,
                               child: Column(
@@ -502,7 +502,9 @@ class _WeatherScreenState extends State<WeatherScreen> {
                     return Center(
                       child: Container(
                         child: DataTable(
-                            headingRowHeight: 0.0,
+                            headingRowHeight: 0.0, // This hides the tabs
+                            horizontalMargin: 0.0, // Adjusts the lines
+                            columnSpacing: 55,
                             columns: const <DataColumn>[
                               DataColumn(label: Text('Day of week')),
                               DataColumn(label: Text('Condition')),
@@ -514,13 +516,21 @@ class _WeatherScreenState extends State<WeatherScreen> {
                               return DataRow(cells: <DataCell>[
                                 DataCell(Text(day.dayOfWeek())),
                                 DataCell(
-                                  Image(
-                                    width: 50,
-                                    height: 50,
-                                    image: NetworkImage(weather.picture),
+                                  Center(
+                                    child: Image(
+                                      // width: 50,
+                                      // height: 50,
+                                      image: NetworkImage(weather.picture,
+                                          scale: 1.0),
+                                    ),
                                   ),
                                 ),
-                                DataCell(Text(temp.toFString())),
+                                DataCell(Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Text(temp.toFString()),
+                                  ],
+                                )),
                               ]);
                             }).toList()),
                       ),
