@@ -71,17 +71,31 @@ class MyApp extends StatelessWidget {
 //houses drawer, nav bar, bottom bar
 
 class HomeScreen extends GetView<HomeController> {
-  List<Widget> pages = [
-    WeatherScreen(cityName: 'Orlando'),
-    Camera(),
-    Settings()
-  ];
+  var currentWeatherScreen = WeatherScreen(cityName: 'Orlando');
+
   @override
   Widget build(BuildContext context) {
+    List<Widget> pages = [
+      Obx(
+        () => AnimatedSwitcher(
+            duration: Duration(seconds: 1),
+            child: controller.currentWeatherScreen.value),
+      ),
+      Camera(),
+      Settings()
+    ];
     return Scaffold(
       body: PageView(
         physics: NeverScrollableScrollPhysics(),
-        children: pages,
+        children: [
+          Obx(
+            () => AnimatedSwitcher(
+                duration: Duration(seconds: 1),
+                child: controller.currentWeatherScreen.value),
+          ),
+          Camera(),
+          Settings()
+        ],
         controller: controller.pageController,
       ),
       bottomNavigationBar: FancyBottomNavigation(
@@ -307,6 +321,7 @@ class WeatherScreen extends StatefulWidget {
 }
 
 class _WeatherScreenState extends State<WeatherScreen> {
+  HomeController controller = Get.find();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController _controller = new TextEditingController();
   // Today
@@ -415,11 +430,11 @@ class _WeatherScreenState extends State<WeatherScreen> {
                               if (_formKey.currentState.validate()) {
                                 print("I'm here");
 
-                                Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => WeatherScreen(
-                                    cityName: _controller.text,
-                                  ),
-                                ));
+                                setState(() {
+                                  controller.currentWeatherScreen.value =
+                                      WeatherScreen(cityName: _controller.text);
+                                  print(controller.currentWeatherScreen.value.cityName);
+                                });
                               }
                             },
                             child: const Text('Submit'),
@@ -501,6 +516,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                   } else {
                     return Center(
                       child: Container(
+                        color: Colors.red,
                         child: DataTable(
                             headingRowHeight: 0.0, // This hides the tabs
                             horizontalMargin: 0.0, // Adjusts the lines

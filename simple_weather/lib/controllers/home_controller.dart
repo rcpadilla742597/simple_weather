@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../main.dart';
+
 class HomeController extends GetxController {
   PageController pageController;
   var currentIndex = 0.obs;
@@ -10,6 +12,8 @@ class HomeController extends GetxController {
     super.onInit();
     pageController = PageController(initialPage: 0);
   }
+
+  var currentWeatherScreen = WeatherScreen(cityName: 'Orlando').obs;
 
   @override
   void onReady() {
