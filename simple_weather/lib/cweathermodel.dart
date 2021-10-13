@@ -30,7 +30,7 @@ class CardWeatherModel {
     //add error checking
     return CardWeatherModel(
       time: json['dt'] ?? 0,
-      location: json['name'] ?? 0,
+      location: json['name'] ?? '0',
       temp: json['main']['temp'] ?? 0,
       pictureUrl:
           "https://openweathermap.org/img/wn/${json['weather'][0]['icon']}@2x.png",

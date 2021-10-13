@@ -432,8 +432,11 @@ class _WeatherScreenState extends State<WeatherScreen> {
 
                                 setState(() {
                                   controller.currentWeatherScreen.value =
-                                      WeatherScreen(cityName: _controller.text);
-                                  print(controller.currentWeatherScreen.value.cityName);
+                                      WeatherScreen(
+                                          cityName: _controller.text,
+                                          key: Key(_controller.text));
+                                  print(controller
+                                      .currentWeatherScreen.value.cityName);
                                 });
                               }
                             },
@@ -516,11 +519,10 @@ class _WeatherScreenState extends State<WeatherScreen> {
                   } else {
                     return Center(
                       child: Container(
-                        color: Colors.red,
                         child: DataTable(
                             headingRowHeight: 0.0, // This hides the tabs
                             horizontalMargin: 0.0, // Adjusts the lines
-                            columnSpacing: 55,
+                            columnSpacing: 60,
                             columns: const <DataColumn>[
                               DataColumn(label: Text('Day of week')),
                               DataColumn(label: Text('Condition')),
@@ -585,7 +587,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Text(card.location.toHello(),
+              Text(card.location ?? ''.toHello(),
                   style: GoogleFonts.poppins(
                     textStyle: TextStyle(
                         fontWeight: FontWeight.w700,
