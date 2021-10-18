@@ -68,7 +68,8 @@ class MyApp extends StatelessWidget {
   }
 }
 
-//houses drawer, nav bar, bottom bar
+// <----------------------------- BEGINNING OF HOMESCREEN ----------------------------->
+// Houses pageview, animatedswitcher, search, scaffold, appbar, camera, settings, fancybottomnavigation
 
 class HomeScreen extends GetView<HomeController> {
   var currentWeatherScreen = WeatherScreen(cityName: 'Orlando');
@@ -123,7 +124,10 @@ class HomeScreen extends GetView<HomeController> {
   }
 }
 
-// CAMERA
+// <----------------------------- END OF HOMESCREEN ----------------------------->
+
+// <----------------------------- BEGINNING OF CAMERA ----------------------------->
+
 class Camera extends StatelessWidget {
   const Camera({Key key}) : super(key: key);
 
@@ -139,6 +143,7 @@ class Camera extends StatelessWidget {
     );
   }
 }
+// <----------------------------- END OF CAMERA ----------------------------->
 
 // <----------------------------- BEGINNING OF SETTINGS ----------------------------->
 
@@ -309,7 +314,8 @@ GestureDetector buildAccountOption(BuildContext context, String title) {
 }
 // <----------------------------- END OF SETTINGS ----------------------------->
 
-//constructor for weatherscreen which points to private constructor/class
+// <----------------------------- BEGINNING OF WEATHERSCREEN  ----------------------------->
+
 class WeatherScreen extends StatefulWidget {
   final String cityName;
   const WeatherScreen({
@@ -324,7 +330,9 @@ class _WeatherScreenState extends State<WeatherScreen> {
   HomeController controller = Get.find();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController _controller = new TextEditingController();
-  // Today
+
+// <!------ BEGINNING OF FWEATHERMODEL CONSTRUCTOR (Today) ------!>
+
   Future<List<ForecastWeatherModel>> forecastFuture;
   Future<List<ForecastWeatherModel>> forecastFetch(String query) async {
     var response = await http.get(Uri.parse(
@@ -339,8 +347,10 @@ class _WeatherScreenState extends State<WeatherScreen> {
         .map((jsonInList) => ForecastWeatherModel.fromJson(jsonInList))
         .toList();
   }
+// <!------ END OF FWEATHERMODEL CONSTRUCTOR (Today) ------!>
 
-  // Card Future
+// <!------ BEGINNING OF CWEATHERMODEL CONSTRUCTOR (Card) ------!>
+
   Future<CardWeatherModel> cardFuture;
   Future<CardWeatherModel> cardFetch(String query) async {
     // print(name);
@@ -351,8 +361,10 @@ class _WeatherScreenState extends State<WeatherScreen> {
 
     return CardWeatherModel.fromJson(loCardWeather);
   }
+  // <!------ END OF CWEATHERMODEL CONSTRUCTOR (Card) ------!>
 
-  // Next 5 days config
+// <!------ BEGINNING OF DWEATHERMODEL CONSTRUCTOR (Next 5 Days) ------!>
+
   Future<List<DaysWeatherModel>> daysFuture;
   Future<List<DaysWeatherModel>> daysFetch(String query) async {
     var response = await http.get(Uri.parse(
@@ -393,7 +405,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
     }
   }
 
-  // Fancy bottom navigation
+  // <!------ END OF DWEATHERMODEL CONSTRUCTOR (Next 5 Days) ------!>
+
   @override
   Widget build(BuildContext context) {
     HomeController controller = Get.put(HomeController());
@@ -500,8 +513,6 @@ class _WeatherScreenState extends State<WeatherScreen> {
                     return Center(child: CircularProgressIndicator());
                   }
                 }),
-
-            // Next 5 days using DataTable
             Text('Next 5 days',
                 style: GoogleFonts.poppins(
                   textStyle: TextStyle(
@@ -620,3 +631,5 @@ class _WeatherScreenState extends State<WeatherScreen> {
     );
   }
 }
+
+// <----------------------------- END OF WEATHERSCREEN  ----------------------------->
