@@ -12,6 +12,7 @@ import 'dart:convert';
 import 'controllers/home_controller.dart';
 import 'extenstions.dart';
 import 'package:fancy_bottom_navigation/fancy_bottom_navigation.dart';
+import 'colors.dart';
 
 void main() => runApp(DevicePreview(
     enabled: true,
@@ -72,8 +73,6 @@ class MyApp extends StatelessWidget {
 // Houses pageview, animatedswitcher, search, scaffold, appbar, camera, settings, fancybottomnavigation
 
 class HomeScreen extends GetView<HomeController> {
-  var currentWeatherScreen = WeatherScreen(cityName: 'Orlando');
-
   @override
   Widget build(BuildContext context) {
     List<Widget> pages = [
@@ -354,13 +353,27 @@ class _WeatherScreenState extends State<WeatherScreen> {
   Future<CardWeatherModel> cardFuture;
   Future<CardWeatherModel> cardFetch(String query) async {
     // print(name);
-    var response = await http.get(Uri.parse(
-        'https://api.openweathermap.org/data/2.5/weather?q=${query}&appid=49a2adca18d67e77118367efe5497060'));
+    try {
+      var response = await http.get(Uri.parse(
+          'https://api.openweathermap.org/data/2.5/weather?q=${query}&appid=49a2adca18d67e77118367efe5497060'));
 
-    var loCardWeather = jsonDecode(response.body);
+      var loCardWeather = jsonDecode(response.body);
 
-    return CardWeatherModel.fromJson(loCardWeather);
+      return CardWeatherModel.fromJson(loCardWeather);
+    } catch (e) {
+      print('caught error');
+      Get.back();
+      Get.defaultDialog(title: "Error", content: Text("You are not logged in"));
+      // return CardWeatherModel(
+      //     condition: 'error',
+      //     temp: 0.0,
+      //     location: 'City not found',
+      //     time: 0,
+      //     pictureUrl:
+      //         'https://p.kindpng.com/picc/s/119-1190723_warning-warning-vector-png-warning-icon-transparent-png.png');
+    }
   }
+
   // <!------ END OF CWEATHERMODEL CONSTRUCTOR (Card) ------!>
 
 // <!------ BEGINNING OF DWEATHERMODEL CONSTRUCTOR (Next 5 Days) ------!>
@@ -437,20 +450,29 @@ class _WeatherScreenState extends State<WeatherScreen> {
                       Padding(
                           padding: const EdgeInsets.symmetric(vertical: 16.0),
                           child: ElevatedButton(
-                            onPressed: () {
+                            onPressed: () async {
                               print(_controller.text);
                               print(_formKey.currentState.validate());
                               if (_formKey.currentState.validate()) {
                                 print("I'm here");
+                                try {
+                                  var response = await http.get(Uri.parse(
+                                      'https://api.openweathermap.org/data/2.5/weather?q=${_controller.text}&appid=49a2adca18d67e77118367efe5497060'));
 
-                                setState(() {
-                                  controller.currentWeatherScreen.value =
-                                      WeatherScreen(
-                                          cityName: _controller.text,
-                                          key: Key(_controller.text));
-                                  print(controller
-                                      .currentWeatherScreen.value.cityName);
-                                });
+                                  var loCardWeather = jsonDecode(response.body);
+                                  setState(() {
+                                    controller.currentWeatherScreen.value =
+                                        WeatherScreen(
+                                            cityName: _controller.text,
+                                            key: Key(_controller.text));
+                                    print(controller
+                                        .currentWeatherScreen.value.cityName);
+                                  });
+                                } catch (e) {
+                                  Get.defaultDialog(
+                                      title: "Error",
+                                      content: Text("You are not logged in"));
+                                }
                               }
                             },
                             child: const Text('Submit'),
@@ -578,16 +600,16 @@ class _WeatherScreenState extends State<WeatherScreen> {
 
   // Rendering CardWeatherModel
   Widget renderCard(CardWeatherModel card) {
+    // print(card.temp);
+    // print(card.temp.runtimeType);
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
-          colors: [
-            Colors.blue,
-            Colors.red,
-          ],
+          colors: card.temp >= 299.817 ? cList1 : cList2,
         ),
+        // color: card.temp >= 80 ? Colors.red : Colors.blue,
         borderRadius: BorderRadius.all(Radius.circular(15)),
       ),
       width: 375,
