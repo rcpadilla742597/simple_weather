@@ -620,7 +620,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Text(card.location ?? ''.toHello(),
+              Text(card.location ?? '',
                   style: GoogleFonts.poppins(
                     textStyle: TextStyle(
                         fontWeight: FontWeight.w700,
@@ -646,6 +646,17 @@ class _WeatherScreenState extends State<WeatherScreen> {
                         fontSize: 15.0,
                         color: Colors.white),
                   )).myPadding(10),
+            ],
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Image(
+                // width: 50,
+                // height: 50,
+                image: NetworkImage(card.picture, scale: 0.6),
+              ),
             ],
           ),
         ],
