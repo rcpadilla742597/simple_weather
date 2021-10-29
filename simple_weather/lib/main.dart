@@ -13,6 +13,7 @@ import 'controllers/home_controller.dart';
 import 'extenstions.dart';
 import 'package:fancy_bottom_navigation/fancy_bottom_navigation.dart';
 import 'colors.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 void main() => runApp(DevicePreview(
     enabled: true,
@@ -571,8 +572,9 @@ class _WeatherScreenState extends State<WeatherScreen> {
                                     child: Image(
                                       // width: 50,
                                       // height: 50,
-                                      image: NetworkImage(weather.picture,
-                                          scale: 1.0),
+                                      image: NetworkImage(
+                                        weather.picture,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -607,14 +609,14 @@ class _WeatherScreenState extends State<WeatherScreen> {
         gradient: LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
-          colors: card.temp >= 299.817 ? cList1 : cList2,
+          colors: card.temp >= 294.261 ? cList1 : cList2,
         ),
-        // color: card.temp >= 80 ? Colors.red : Colors.blue,
         borderRadius: BorderRadius.all(Radius.circular(15)),
       ),
       width: 375,
       height: 250,
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -648,16 +650,19 @@ class _WeatherScreenState extends State<WeatherScreen> {
                   )).myPadding(10),
             ],
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Image(
-                // width: 50,
-                // height: 50,
-                image: NetworkImage(card.picture, scale: 0.6),
-              ),
-            ],
+          Container(
+            margin: EdgeInsets.only(right: 50.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                SvgPicture.network(
+                  card.picture,
+                  width: 80,
+                  height: 80,
+                ),
+              ],
+            ),
           ),
         ],
       ),

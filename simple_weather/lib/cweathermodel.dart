@@ -33,7 +33,7 @@ class CardWeatherModel {
       location: json['name'] ?? '0',
       temp: json['main']['temp'] ?? 0,
       pictureUrl:
-          "https://openweathermap.org/img/wn/${json['weather'][0]['icon']}@2x.png",
+          "https://raw.githubusercontent.com/rcpadilla742597/open-weather-icons/main/${json['weather'][0]['icon']}.svg",
       condition: json["weather"][0]["description"],
       message: "${json['message']}",
     );

@@ -14,5 +14,5 @@ class MyColors {
   const MyColors();
 }
 
-final cList1 = const [Colors.red, Colors.orange];
-final cList2 = const [Colors.blue, Colors.blueGrey];
+final cList1 = const [Colors.yellow, Colors.red];
+final cList2 = const [Colors.lightBlue, Colors.blueGrey];
