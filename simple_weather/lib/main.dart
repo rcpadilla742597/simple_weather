@@ -511,24 +511,74 @@ class _WeatherScreenState extends State<WeatherScreen> {
                         scrollDirection: Axis.horizontal,
                         itemCount: snapshot.data.length,
                         itemBuilder: (context, index) {
-                          return Container(
-                              margin: EdgeInsets.symmetric(horizontal: 10),
-                              width: 50,
-                              height: 50,
-                              child: Column(
-                                children: [
-                                  Text(DateTime.fromMillisecondsSinceEpoch(
-                                              snapshot.data[index].time * 1000)
-                                          .hour
-                                          .toString() +
-                                      ":00"),
-                                  Image(
-                                    image: NetworkImage(
-                                        snapshot.data[index].picture),
-                                  ),
-                                  Text(snapshot.data[index].condition),
-                                ],
-                              ));
+                          return GestureDetector(
+                            onTap: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return Container(
+                                      decoration: BoxDecoration(
+                                        gradient: LinearGradient(
+                                          begin: Alignment.topRight,
+                                          end: Alignment.bottomLeft,
+                                          colors: snapshot.data[index].temp >=
+                                                  294.261
+                                              ? cList1
+                                              : cList2,
+                                        ),
+                                      ),
+                                      child: AlertDialog(
+                                        title: Text('Today'),
+                                        content: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Text(
+                                                DateTime.fromMillisecondsSinceEpoch(
+                                                            snapshot.data[index]
+                                                                    .time *
+                                                                1000)
+                                                        .hour
+                                                        .toString() +
+                                                    ":00"),
+                                            Image(
+                                              image: NetworkImage(
+                                                  snapshot.data[index].picture),
+                                            ),
+                                            Text(
+                                                snapshot.data[index].condition),
+                                          ],
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: Text("Close"))
+                                        ],
+                                      ),
+                                    );
+                                  });
+                            },
+                            child: Container(
+                                margin: EdgeInsets.symmetric(horizontal: 10),
+                                width: 50,
+                                height: 50,
+                                child: Column(
+                                  children: [
+                                    Text(DateTime.fromMillisecondsSinceEpoch(
+                                                snapshot.data[index].time *
+                                                    1000)
+                                            .hour
+                                            .toString() +
+                                        ":00"),
+                                    Image(
+                                      image: NetworkImage(
+                                          snapshot.data[index].picture),
+                                    ),
+                                    Text(snapshot.data[index].condition),
+                                  ],
+                                )),
+                          );
                         },
                       ),
                     );
