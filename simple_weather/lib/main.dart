@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -706,11 +707,15 @@ class _WeatherScreenState extends State<WeatherScreen> {
               crossAxisAlignment: CrossAxisAlignment.end,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                SvgPicture.network(
-                  card.picture,
-                  width: 80,
-                  height: 80,
-                ),
+                kIsWeb
+                    ? Image(
+                        image: NetworkImage(card.picture),
+                      )
+                    : SvgPicture.network(
+                        card.picture,
+                        width: 80,
+                        height: 80,
+                      )
               ],
             ),
           ),
